@@ -1,0 +1,41 @@
+<!-- //login -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="/stylesheets/login.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Linking to Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- Linking to your custom stylesheet -->
+   
+</head>
+<body class="bg-gradient-to-r from-slate-400 from-10% via-blue-100 via-50% to-slate-400 to-90% ...">
+   
+    <%- include("partials/navbarBefore.ejs") %>
+
+    <div class="background-image flex justify-center items-center h-screen">
+        <div class="login-form bg-white p-8 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-semibold mb-4">Login</h2>
+            <form action="/login" method="post">
+                <div class="mb-4">
+                    <label for="username" class="block mb-1">Username</label>
+                    <input type="text" id="username" name="username" required class="border border-gray-300 px-3 py-2 w-full rounded-md focus:outline-none focus:border-blue-400">
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="block mb-1">Password</label>
+                    <input type="password" id="password" name="password" required class="border border-gray-300 px-3 py-2 w-full rounded-md focus:outline-none focus:border-blue-400">
+                </div>
+                <div>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Login</button>
+                </div>
+            </form>
+            <p class="mt-4">Don't have an account? <a href="/register" class="text-blue-500">Register now</a></p>
+        </div>
+    </div>
+    <script src="/javascripts/navbar.js"></script>
+
+</body>
+</html>

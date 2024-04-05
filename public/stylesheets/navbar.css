@@ -1,0 +1,50 @@
+/* styles.css */
+
+/* Set a minimum height for the navbar */
+.navbar {
+    min-height: 60px; /* Adjust as needed */
+}
+
+/* Style the logo and website name */
+.navbar-brand {
+    font-size: 1.5rem; /* Adjust as needed */
+    font-weight: bold;
+    color: #333; /* Adjust the color */
+}
+
+/* Style the menu items */
+.navbar-nav .nav-link {
+    padding: 0.5rem 1rem; /* Adjust padding */
+    color: #333; /* Adjust the color */
+}
+
+/* Style the navbar toggler button */
+.navbar-toggler {
+    border: none;
+}
+
+/* Change color of navbar toggler icon */
+.navbar-toggler-icon {
+    background-color: #333; /* Adjust the color */
+}
+
+/* Add spacing between navbar toggler icon and text */
+.navbar-toggler span {
+    margin-right: 5px; /* Adjust as needed */
+}
+
+/* Style the dropdown menu items */
+.dropdown-menu {
+    min-width: 150px; /* Adjust as needed */
+}
+
+/* Style the dropdown menu item links */
+.dropdown-menu a {
+    padding: 0.5rem 1rem; /* Adjust padding */
+    color: #333; /* Adjust the color */
+}
+
+/* Add hover effect to dropdown menu items */
+.dropdown-menu a:hover {
+    background-color: #f8f9fa; /* Adjust the color */
+}

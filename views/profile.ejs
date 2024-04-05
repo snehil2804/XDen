@@ -1,0 +1,148 @@
+<!-- profile.ejs -->
+<%- include("partials/head.ejs") %>
+<body class="bg-gradient-to-r from-slate-400 from-10% via-blue-100 via-50% to-slate-400 to-90% ...">
+    <!-- Including Navbar -->
+    <%- include("partials/navbar.ejs") %>
+
+    <div class="container mt-10">
+        <!-- hidden form to upload image, which is interlinked with js file, upon clicking the icon -->
+        <form id="uploadForm" class="hidden" action="/fileupload" method="post" enctype="multipart/form-data">
+            <input type="file" name="profileImage">
+        </form>
+        <!-- Profile Section -->
+        <div class="profile-section flex flex-col  items-center">
+        <div class="relative">
+            <span id="uploadImage" class="w-10 h-10 absolute bottom-0 right-7 rounded-full flex items-center justify-center bg-zinc-200 hover:bg-zinc-400 hover:scale-95">
+                <i class="fas fa-pencil-alt text-zinc-800"></i>
+            </span>
+            <div class="flex justify-center items-center">   
+                <!-- Check if user.profilepicture exists, if not, use default profile icon -->
+                <% if (user.profilepicture) { %>
+                    <img src="/images/uploads/<%= user.profilepicture %>"  class="user-photo w-40 h-40 rounded-full object-cover border-4 border-gray-500">
+                <% } else { %>
+                    <img src="/images/default/default_profile_icon.jpg" alt="Default Profile Icon" class="user-photo w-40 h-40 rounded-full object-cover border-4 border-gray-500">
+                <% } %>
+            </div>
+        </div>
+            
+        <div class="user-details text-center mt-4 ">
+            <h2 class="text-xl font-bold"><%= user.name %></h2>
+            <p class="text-gray-600">@<%= user.username %></p>
+            <a href="#" class="text-blue-500 hover:text-blue-700"><i class="fas fa-edit"></i> Edit</a>
+        </div>
+        
+            <a href="/add" class="bg-red-500 text-white px-4 py-2 rounded mt-4 hover:scale-95"><i class="fas fa-plus-circle"></i>New Post</a>
+        </div>
+
+        <!-- Separator Line -->
+        <hr class="border-gray-800 my-10 w-full" style="opacity: 0.3;">
+
+        <!-- Cards Section -->
+        <div class="cards flex flex-wrap gap-10 px-10 items-center justify-center">
+            <!-- Uploaded Posts -->
+            <div class="card">
+                <% if (user.posts.length > 0) { %>
+                    <div class="w-52 h-52 bg-zinc-200 rounded-lg overflow-hidden">
+                        <a href="/show/posts"><img class="w-full h-full object-cover" src="/images/uploads/<%= user.posts[0].image %>" alt="User Photo"></a>
+                    </div>
+                <% } else { %>
+                    <div class="w-52 h-52 rounded-lg overflow-hidden">  
+                        <a href="/saved/posts"><img class="w-full h-full object-cover" src="https://static.vecteezy.com/system/resources/previews/024/584/420/original/cute-cat-say-no-with-round-background-flat-cartoon-illustration-png.png" alt="User Photo"></a>
+                </div><!-- Handle case when user has no uploaded posts -->
+                    
+                <% } %>
+                <a href="/show/posts" class="text-xl font-semibold mt-3 inline-block">Your Uploaded Posts</a>
+                <h5 class="text-sm font-medium opacity-60"><%= user.posts.length %></h5>
+            </div>
+        
+            <!-- Saved Posts -->
+            <div class="card">
+                <% if (user.bookmarks.length > 0) { %>
+                    <div class="w-52 h-52 bg-zinc-200 rounded-lg overflow-hidden">
+                        <a href="/saved/posts"><img class="w-full h-full object-cover" src="/images/uploads/<%= user.bookmarks[0].image %>" alt="User Photo"></a>
+                    </div>
+                <% } else { %>
+                    <div class="w-52 h-52 rounded-lg overflow-hidden">   <!-- Handle case when user has no saved posts -->
+                        <a href="/saved/posts"><img class="w-full h-full object-cover" src="https://static.vecteezy.com/system/resources/previews/024/584/420/original/cute-cat-say-no-with-round-background-flat-cartoon-illustration-png.png" alt="User Photo"></a>
+                </div>
+                <% } %>
+                <a href="/saved/posts" class="text-xl font-semibold mt-3 inline-block">Saved Posts</a>
+                <h5 class="text-sm font-medium opacity-60"><%= user.bookmarks.length %></h5>
+            </div>
+        
+            <!-- Liked Posts -->
+            <div class="card">
+                <% if (user.likedposts.length > 0) { %>
+                    <div class="w-52 h-52 bg-zinc-200 rounded-lg overflow-hidden">
+                        <a href="/liked/posts"><img class="w-full h-full object-cover" src="/images/uploads/<%= user.likedposts[0].image %>" alt="User Photo"></a>
+                    </div>
+                <% } else { %>
+                   
+                <div class="w-52 h-52 rounded-lg overflow-hidden"> 
+                        <a href="/liked/posts"><img class="w-full h-full object-cover" src="https://static.vecteezy.com/system/resources/previews/024/584/420/original/cute-cat-say-no-with-round-background-flat-cartoon-illustration-png.png" alt="User Photo"></a>
+                </div>
+                <% } %>
+                <a href="/liked/posts" class="text-xl font-semibold mt-3 inline-block">Liked Posts</a>
+                <h5 class="text-sm font-medium opacity-60"><%= user.likedposts.length %></h5>
+            </div>
+        </div>
+</div>        
+    <!-- Including Navbar JavaScript -->
+    <script src="/javascripts/navbar.js"></script>
+    <script>
+        document.getElementById('uploadImage').addEventListener('click', () => {
+            document.querySelector("#uploadForm input").click();
+        });
+        document.querySelector("#uploadForm input").addEventListener('change', () => {
+            document.querySelector("#uploadForm").submit();
+        });
+    </script>
+      <script src="/javascripts/LikedPost.js"></script>
+      <script src="/javascripts/Bookmark.js"></script>
+       
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+      <script>
+       document.querySelector("#searchInput").addEventListener("input", function(event) {
+      const inputValue = event.target.value;
+      axios.get(`/tags/${inputValue}`)
+          .then(function(response) {
+              const inputValueLowerCase = inputValue.toLowerCase();
+              // Ensure that response.data is an array
+              if (Array.isArray(response.data)) {
+                  const matchingTags = response.data.filter(function(tag) {
+                      return tag.toLowerCase().startsWith(inputValueLowerCase);
+                  });
+  
+                  const suggestionsDiv = document.querySelector("#searchSuggestions");
+                  suggestionsDiv.innerHTML = matchingTags.map(function(tag) {
+                      return `<div class="suggestion bg-blue-100 text-gray-800 px-2 py-1">${tag}</div>`;
+                  }).join('');
+                  suggestionsDiv.classList.remove('hidden'); // Show the suggestions div
+              } else {
+                  console.error('Invalid response data format:', response.data);
+                  window.location.reload(); 
+              }
+          })
+          .catch(function(error) {
+              console.error('Error fetching data:', error);
+              window.location.reload(); 
+          });
+  });
+  
+  document.addEventListener("DOMContentLoaded", function () {
+      // Add event listener to suggestion divs
+      document.querySelector("#searchSuggestions").addEventListener("click", function (event) {
+          // Check if the clicked element is a suggestion div
+          if (event.target.classList.contains("suggestion")) {
+              // Extract the tag from the clicked suggestion
+              const clickedTag = event.target.textContent.trim();
+  
+              // Redirect to the corresponding route with the clicked tag as parameter
+              window.location.href = `/tagss/${clickedTag}`;
+          }
+      });
+  });
+  </script>
+      
+</body>
+</html>

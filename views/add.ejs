@@ -1,0 +1,79 @@
+<!-- add.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Post - XDen</title>
+    <!-- Linking to Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Linking to Font Awesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- Linking to your custom stylesheet -->
+    <link rel="stylesheet" href="/stylesheets/profile.css">
+    <style>
+        /* Custom styles for the form */
+        input[type="text"],
+        input[type="file"],
+        textarea {
+            border: 1px solid #d1d5db; /* Adding border to input fields */
+            padding: 0.5rem; /* Adding padding to input fields */
+            margin-bottom: 1rem; /* Adding margin bottom to input fields */
+            width: 100%; /* Setting width to 100% */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <nav class="navbar flex justify-between items-center py-2 px-6 bg-gray-800 text-white shadow-md transition-all duration-300">
+        <div class="navbar-left">
+            <div class="logo text-lg font-semibold tracking-wide">XDen</div>
+        </div>
+        <div class="navbar-right">
+            <ul class="navbar-links flex items-center space-x-4">
+                <li><a href="/profile" class="hover:text-gray-300 transition-colors duration-300">Profile</a></li>
+                <li><a href="/index" class="hover:text-gray-300 transition-colors duration-300">Feed</a></li>
+                <li>
+                    <form action="/logout" method="POST">
+                        <button type="submit" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md transition-all duration-300">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="bg-white p-8 rounded-lg shadow-md w-80">
+        <h1 class="text-2xl font-bold mb-6 text-center">Create a New Post</h1>
+        <form action="/createpost" method="post" enctype="multipart/form-data" class="text-center" onsubmit="convertInputToLowercase()">
+            <div class="mb-4">
+                <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+                <input type="text" id="title" name="title" class="rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div class="mb-4">
+                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                <textarea id="description" name="description" rows="4" class="rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+            </div>
+            <div class="mb-4">
+                <label for="image" class="block text-sm font-medium text-gray-700">Image</label>
+                <input type="file" id="image" name="postimage" accept="image/*" class="rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <div class="mb-4">
+                <label for="tags" class="block text-sm font-medium text-gray-700">Tags (separated by spaces)</label>
+                <input type="text" id="tags" name="tags" class="rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-800 transition-all duration-300">Create Post</button>
+        </form>
+    </div>
+
+    <script>
+        function convertInputToLowercase() {
+            // Select all input elements in the form
+            var inputs = document.querySelectorAll('form input[type="text"], form input[type="file"], form textarea');
+
+            // Convert each input name to lower case
+            inputs.forEach(function(input) {
+                input.name = input.name.toLowerCase();
+            });
+        }
+    </script>
+</body>
+</html>

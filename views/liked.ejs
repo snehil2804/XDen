@@ -1,0 +1,40 @@
+<!-- liked.ejs -->
+<%- include("partials/head.ejs") %>
+<body class="bg-gradient-to-r from-slate-400 from-10% via-blue-100 via-50% to-slate-400 to-90% ...">
+    <!-- Including Navbar -->
+    <%- include("partials/navbar.ejs") %>
+
+    <div class="container mt-10">
+        <!-- Your Content Here -->
+        <h1 class="text-2xl font-semibold mb-4">Your Liked Posts </h1>
+        <div class="dens-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+
+            <% user.likedposts.reverse().forEach(post => { %>
+                <div id="post-<%= post._id %>" class="card flex flex-col items-center">
+                    <div class="w-56 h-56 flex justify-center items-center relative">
+                        <!-- Add onclick event to call deletePost function -->
+                        <span class="w-10 h-10 absolute bottom-0 right-0 rounded-full flex items-center justify-center bg-zinc-200 hover:scale-90 hover:bg-zinc-300 cursor-pointer" onclick="likePost('<%= post._id %>')">
+                            <i class="fas fa-heart text-red-600"></i>
+                        </span>
+                        <div class="w-52 h-52 bg-gray-200 rounded-lg overflow-hidden flex items-center justify-center">
+                            <img class="w-full h-full object-cover" src="/images/uploads/<%= post.image %>" alt="Den Image">
+                        </div>
+                    </div>
+                    <div class="h-16 object-cover overflow-hidden">
+                        <h2 class="text-lg font-semibold mt-3 text-center"><%= post.title %></h2>
+                    </div>
+                </div>
+            <% }); %>
+
+            <% if (user.likedposts.length === 0) { %>
+                <p class="text-gray-600">Go to the feed and like some posts.</p>
+            <% } %>
+        </div>
+    </div>
+
+
+    
+    <script src="/javascripts/navbar.js"></script>
+    <script src="/javascripts/LikedPost.js"></script>
+</body>
+</HTML>

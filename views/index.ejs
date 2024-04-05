@@ -1,0 +1,136 @@
+<!-- index.ejs -->
+<%- include("partials/head.ejs") %>
+<body class="bg-gradient-to-r from-slate-400 from-10% via-blue-100 via-50% to-slate-400 to-90% ...">
+    <!-- Navbar -->
+    <!-- Your navbar code -->
+    <nav class="navbar flex justify-between items-center py-2 px-6 bg-gray-800 text-white shadow-md transition-all duration-300">
+        <div class="navbar-left">
+            <div class="logo text-lg font-semibold tracking-wide">XDen</div>
+        </div>
+        <div class="navbar-middle">
+            <form action="/search" method="get">
+                <input type="text" id="searchInput" name="query" placeholder="Search..." class="bg-gray-700 text-white px-5 py-1 rounded-md focus:outline-none focus:ring focus:border-blue-300 transition-all duration-300" style="width: 15rem;">
+                <!-- Add a div to display suggestions -->
+                <div id="searchSuggestions" class="rounded-md overflow-hidden object-cover text-gray-800  mt-1 shadow-md " style="position: fixed; width: 15rem; opacity:10; z-index: 999;">
+                    <!-- Suggestions will be displayed here -->
+                </div>
+                <button type="submit" class="hidden">Search</button>
+            </form>
+        </div>
+        <div class="navbar-right">
+            <ul class="navbar-links flex items-center space-x-4">
+                <li><a href="/index" class="hover:text-gray-300 transition-colors duration-300">Feed</a></li>
+                <li><a href="/profile" class="hover:text-gray-300 transition-colors duration-300">Profile</a></li>
+                <li>
+                    <form action="/logout" method="get">
+                        <button type="submit" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md transition-all duration-300">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Feed Section -->
+    
+    <div class="feeds container">
+        
+        <% post.reverse().forEach(post => { %>
+            <div id="post-<%= post._id %>" class="feed bg-gray-200 shadow-md drop-shadow-2xl  " >
+                <div class="feed-header">
+                    <div class="flex items-center">
+                        <img  src="/images/uploads/<%= post.user.profilepicture || 'default_profile_icon.jpg' %>"  alt="User Profile">
+                        <span class="username">@<%= post.user.username %></span>
+                    </div>
+                    <p class="text-sm text-gray-600">Uploaded on <%= new Date(post.createdAt).toLocaleDateString() %></p>
+                </div>
+
+                <div class="relative" style="height: 435px;">
+                    <% if( post.noOfLikes.includes(loggedInUser)){ %>
+                        <span class="heart-icon w-8 h-8 absolute bottom-0 left-0 rounded-full flex items-center justify-center  hover:scale-125 fas text-red-600" onclick="likePost('<%= post._id %>')">
+                            <i class="fas fa-heart text-red-600" style="font-size:1.5rem;"></i>
+                        </span>
+                    <% } else { %>
+                        <span class="heart-icon w-8 h-8 absolute bottom-0 left-0 rounded-full flex items-center justify-center hover:scale-125 far text-zinc-800" onclick="likePost('<%= post._id %>')">
+                            <i class="far fa-heart text-zinc-800" style="font-size:1.5rem; animation: heartBeat 0.5s;"></i>
+                        </span>
+                    <% } %>
+
+                    <% if( user.bookmarks.includes(post._id)){ %>
+                        <span class="heart-icon w-8 h-8 absolute bottom-0 right-0 rounded-full flex items-center justify-center hover:scale-110 fas text-red-600" onclick="bookmark('<%= post._id %>')">
+                            <i class="fas fa-bookmark text-black" style="font-size:1.5rem;"></i>
+                        </span>
+                    <% } else { %>
+                        <span class="heart-icon w-8 h-8 absolute bottom-0 right-0 rounded-full flex items-center justify-center hover:scale-110 far text-zinc-800" onclick="bookmark('<%= post._id %>')">
+                            <i class="far fa-bookmark text-zinc-800" style="font-size:1.5rem; animation: heartBeat 0.5s;"></i>
+                        </span>
+                    <% } %>
+                
+                    
+                    <span class="likes-count text-sm text-gray-600 absolute bottom-1 left-9" style="font-size: 0.9rem;"><%= post.noOfLikes.length %> likes</span>
+                    <div class="feed-image flex justify-center items-center drop-shadow" style="height: 400px;"> <!-- Adjust the height as needed -->
+                        <img src="/images/uploads/<%= post.image %>" class="w-full h-full object-cover rounded-md " alt="Post Image">
+                    </div>
+                </div>
+                <div class="feed-content mt-2">
+                    <h3 class="text-xl font-semibold"><%= post.title %></h3>
+                    <p class="text-gray-700 mt-1"><%= post.description %></p>
+                </div>
+            </div>
+        <% }); %>
+        
+        <% if (post.length === 0) { %>
+            <p class="text-gray-600 text-center">No posts available.</p>
+        <% } %>
+        
+    </div>
+    <!-- Include your footer or any additional content -->
+    <script src="/javascripts/navbar.js"></script>
+    <script src="/javascripts/LikedPost.js"></script>
+    <script src="/javascripts/Bookmark.js"></script>
+     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script>
+     document.querySelector("#searchInput").addEventListener("input", function(event) {
+    const inputValue = event.target.value;
+    axios.get(`/tags/${inputValue}`)
+        .then(function(response) {
+            const inputValueLowerCase = inputValue.toLowerCase();
+            // Ensure that response.data is an array
+            if (Array.isArray(response.data)) {
+                const matchingTags = response.data.filter(function(tag) {
+                    return tag.toLowerCase().startsWith(inputValueLowerCase);
+                });
+
+                const suggestionsDiv = document.querySelector("#searchSuggestions");
+                suggestionsDiv.innerHTML = matchingTags.map(function(tag) {
+                    return `<div class="suggestion bg-blue-100 text-gray-800 px-2 py-1">${tag}</div>`;
+                }).join('');
+                suggestionsDiv.classList.remove('hidden'); // Show the suggestions div
+            } else {
+                console.error('Invalid response data format:', response.data);
+                window.location.reload(); 
+            }
+        })
+        .catch(function(error) {
+            console.error('Error fetching data:', error);
+            window.location.reload(); 
+        });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Add event listener to suggestion divs
+    document.querySelector("#searchSuggestions").addEventListener("click", function (event) {
+        // Check if the clicked element is a suggestion div
+        if (event.target.classList.contains("suggestion")) {
+            // Extract the tag from the clicked suggestion
+            const clickedTag = event.target.textContent.trim();
+
+            // Redirect to the corresponding route with the clicked tag as parameter
+            window.location.href = `/tagss/${clickedTag}`;
+        }
+    });
+});
+</script>
+    
+
+</body>
+</html>

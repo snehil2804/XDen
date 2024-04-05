@@ -1,0 +1,31 @@
+<!-- //navbar.ejs -->
+<nav class="navbar flex  items-center py-2 px-6 bg-gray-800 text-white shadow-md transition-all duration-300">
+   
+     <div class="navbar-left ">
+        <div class="logo text-lg font-semibold tracking-wide">XDen</div>
+     </div>
+    
+
+
+    <div class="navbar-middle">
+        <form action="/search" method="get">
+            <input type="text" id="searchInput" name="query" placeholder="Search..." class="bg-gray-700 text-white px-5 py-1 rounded-md focus:outline-none focus:ring focus:border-blue-300 transition-all duration-300" style="width: 15rem;">
+            <!-- Add a div to display suggestions -->
+            <div id="searchSuggestions" class="rounded-md overflow-hidden object-cover text-gray-800  mt-1 shadow-md " style="position: fixed; width: 15rem; opacity:10; z-index: 999;">
+                <!-- Suggestions will be displayed here -->
+            </div>
+            <button type="submit" class="hidden">Search</button>
+        </form>
+    </div>
+    <div class="navbar-right">
+        <ul class="navbar-links flex items-center space-x-4">
+            <li><a href="/index" class="hover:text-gray-300 transition-colors duration-300">Feed</a></li>
+            <li><a href="/profile" class="hover:text-gray-300 transition-colors duration-300">Profile</a></li>
+            <li>
+                <form action="/logout" method="get">
+                    <button type="submit" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-md transition-all duration-300">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
